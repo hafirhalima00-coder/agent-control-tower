@@ -169,11 +169,14 @@ export interface DashboardStats {
   totalAuditEntries: number;
   recentActivity: AuditEntry[];
   agentPerformance: AgentPerformance[];
-  // Control Tower stats
-  systemHealth: number;
-  trustScore: number;
-  interventionsToday: number;
+  // Executive KPIs
   blockedActions: number;
+  avgExecutionTime: number;
+  avgConfidence: number;
+  avgTrustScore: number;
+  humanApprovalRate: number;
+  simulationTick: number;
+  agentStatuses: { id: string; name: string; status: string }[];
 }
 
 export interface AgentPerformance {

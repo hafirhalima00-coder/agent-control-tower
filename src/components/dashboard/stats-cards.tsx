@@ -3,12 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { 
-  Bot, 
-  CheckSquare, 
-  AlertTriangle, 
-  Clock, 
-  TrendingUp,
-  TrendingDown 
+  Bot, CheckSquare, AlertTriangle, Clock, TrendingUp, TrendingDown,
+  Timer, DollarSign, ThumbsUp, Shield, Ban, Brain
 } from 'lucide-react';
 
 interface StatsCardsProps {
@@ -21,6 +17,11 @@ interface StatsCardsProps {
     successRate: number;
     pendingApprovals: number;
     activeAlerts: number;
+    blockedActions: number;
+    avgExecutionTime: number;
+    avgConfidence: number;
+    avgTrustScore: number;
+    humanApprovalRate: number;
   };
 }
 
@@ -53,6 +54,30 @@ export function StatsCards({ stats }: StatsCardsProps) {
       bgColor: stats.successRate >= 90 ? 'bg-green-500/10' : 'bg-yellow-500/10',
     },
     {
+      title: 'Avg Confidence',
+      value: `${(stats.avgConfidence * 100).toFixed(0)}%`,
+      icon: Brain,
+      description: 'Across all agents',
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
+    },
+    {
+      title: 'Avg Response Time',
+      value: `${stats.avgExecutionTime}ms`,
+      icon: Timer,
+      description: 'Per action',
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10',
+    },
+    {
+      title: 'Human Approval Rate',
+      value: `${stats.humanApprovalRate}%`,
+      icon: ThumbsUp,
+      description: 'Approvals granted',
+      color: stats.humanApprovalRate >= 70 ? 'text-green-500' : 'text-yellow-500',
+      bgColor: stats.humanApprovalRate >= 70 ? 'bg-green-500/10' : 'bg-yellow-500/10',
+    },
+    {
       title: 'Pending Approvals',
       value: stats.pendingApprovals,
       icon: Clock,
@@ -69,9 +94,17 @@ export function StatsCards({ stats }: StatsCardsProps) {
       bgColor: stats.activeAlerts > 5 ? 'bg-red-500/10' : 'bg-yellow-500/10',
     },
     {
+      title: 'Blocked Actions',
+      value: stats.blockedActions,
+      icon: Ban,
+      description: 'Prevented by policy',
+      color: stats.blockedActions > 0 ? 'text-red-500' : 'text-gray-500',
+      bgColor: stats.blockedActions > 0 ? 'bg-red-500/10' : 'bg-gray-500/10',
+    },
+    {
       title: 'Failed Tasks',
       value: stats.failedTasks,
-      icon: AlertTriangle,
+      icon: Shield,
       description: 'Need attention',
       color: stats.failedTasks > 3 ? 'text-red-500' : 'text-gray-500',
       bgColor: stats.failedTasks > 3 ? 'bg-red-500/10' : 'bg-gray-500/10',
@@ -79,20 +112,20 @@ export function StatsCards({ stats }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {cards.map((card) => (
         <Card key={card.title}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-xs font-medium text-muted-foreground truncate">
               {card.title}
             </CardTitle>
-            <div className={cn('rounded-lg p-2', card.bgColor)}>
-              <card.icon className={cn('h-4 w-4', card.color)} />
+            <div className={cn('rounded-lg p-1.5 shrink-0', card.bgColor)}>
+              <card.icon className={cn('h-3.5 w-3.5', card.color)} />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{card.value}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xl font-bold">{card.value}</div>
+            <p className="text-xs text-muted-foreground truncate">
               {card.total !== undefined ? `of ${card.total} total` : card.description}
             </p>
           </CardContent>

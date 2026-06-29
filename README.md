@@ -2,182 +2,125 @@
 
 > **How do humans manage an AI workforce when agents can act across real systems?**
 
-Agent Control Tower is a centralized command center for supervising AI agents operating across business systems. It provides humans with visibility, control, and governance over autonomous AI actions.
+[![Demo Video](https://img.shields.io/badge/watch-demo-red)](https://youtu.be/JI1OGZVuIls)
+[![Deployed on Vercel](https://img.shields.io/badge/deployed-vercel-black)](https://agentops-control-tower.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://typescriptlang.org)
 
-## The Problem
+**Agent Control Tower** is a centralized command center for supervising AI agents operating across business systems — CRM, Email, WhatsApp, Calendar, and more. It provides humans with real-time visibility, human-in-the-loop approval controls, and complete audit governance over autonomous AI actions.
 
-AI agents are increasingly acting across real business systems - sending emails, updating CRMs, processing payments, scheduling meetings. But without proper oversight, this creates risks:
+[▶ Watch the demo](https://youtu.be/JI1OGZVuIls) | [🌐 Live demo](https://agentops-control-tower.vercel.app)
 
-- **Unintended actions** - Agents making decisions humans didn't anticipate
-- **System sprawl** - Multiple agents accessing the same systems without coordination
-- **Trust deficit** - No way to verify agent behavior or explain decisions
-- **Compliance gaps** - No audit trail for regulatory requirements
+---
 
-## The Solution
+## Key Features
 
-Agent Control Tower provides **human-in-the-loop governance** for AI agent operations:
+### 🎮 Live Simulation Engine
+Agents dynamically change status (Running, Waiting, Blocked) every few seconds. Tool calls appear in real time with progress bars. New audit events and approval requests are generated continuously — the dashboard feels truly operational.
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        THE CONTROL TOWER MODEL                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   HUMANS                    CONTROL TOWER                   AI AGENTS  │
-│   ───────                   ─────────────                   ──────────  │
-│                                                                         │
-│   ┌─────────┐           ┌────────────────┐            ┌─────────────┐  │
-│   │ Observe │ ◄──────── │  Real-time     │ ────────►  │ Agent       │  │
-│   │         │           │  Dashboard     │            │ Fleet       │  │
-│   └─────────┘           └────────────────┘            └─────────────┘  │
-│                                                                         │
-│   ┌─────────┐           ┌────────────────┐            ┌─────────────┐  │
-│   │ Decide  │ ◄──────── │  Approval      │ ◄──────── │ High-risk   │  │
-│   │         │           │  Queue         │            │ Actions     │  │
-│   └─────────┘           └────────────────┘            └─────────────┘  │
-│                                                                         │
-│   ┌─────────┐           ┌────────────────┐            ┌─────────────┐  │
-│   │ Intervene│ ◄──────── │  Controls      │ ────────► │ Pause/Stop/ │  │
-│   │         │           │                │            │ Redirect    │  │
-│   └─────────┘           └────────────────┘            └─────────────┘  │
-│                                                                         │
-│   ┌─────────┐           ┌────────────────┐            ┌─────────────┐  │
-│   │ Audit   │ ◄──────── │  Complete      │ ◄──────── │ Every       │  │
-│   │         │           │  Trail         │            │ Action      │  │
-│   └─────────┘           └────────────────┘            └─────────────┘  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+### ✅ Human Approval Center
+Agents request approval before executing high-risk actions. Humans see risk level, context, impact assessment, and alternatives — then Approve or Reject with one click. True human-in-the-loop control.
 
-## Core Concepts
+### 📊 Agent Hierarchy Graph
+Visual tree showing CEO → Agent relationships with animated request flows. Status indicators show which agents are active, idle, or errored at a glance.
 
-### 1. Agent Boundaries
+### 🔁 Mission Replay
+Play, pause, step through the full execution timeline. Adjust replay speed (0.5x–4x). See every decision, action, and result in sequence.
 
-Every agent operates within defined boundaries:
+### 🧠 AI Decision Log
+When the system blocks an agent action, a transparent explanation panel shows:
+- **Decision**: BLOCKED with policy reference
+- **Confidence**: Score with progress bar
+- **Reason**: Why it was blocked
+- **Policy**: Exact policy violated
+- **Recommended action**: How to resolve
 
-- **Allowed Actions** - What the agent can do
-- **Blocked Actions** - What the agent cannot do (even if requested)
-- **System Access** - Which external systems the agent can connect to
-- **Risk Limits** - Maximum risk level for autonomous actions
-- **Approval Triggers** - Actions that require human review before execution
+### 📈 Executive KPIs
+At-a-glance metrics panel:
+- Active agents / Running tasks
+- Success rate / Avg confidence
+- Avg response time (ms)
+- Human approval rate
+- Blocked actions / Failed tasks
+- Pending approvals / Active alerts
 
-### 2. Trust Score
+### 📱 Mobile Responsive
+Fully responsive layout. Tab navigation scrolls horizontally on small screens. Cards reflow into 2-column grids on mobile.
 
-Each agent has a dynamic trust score based on:
-
-- **Success Rate** - Historical task completion accuracy
-- **Confidence Calibration** - How well confidence scores predict outcomes
-- **Boundary Compliance** - Respecting allowed/blocked actions
-- **Human Overrides** - Frequency of human corrections
-- **System Health** - Connection reliability and error rates
-
-### 3. Intervention Controls
-
-Humans can intervene at any time:
-
-- **Pause** - Temporarily stop an agent while preserving state
-- **Stop** - Completely halt an agent
-- **Redirect** - Change an agent's current task
-- **Override** - Manually complete a task the agent couldn't
-- **Reset** - Return an agent to its initial state
-
-### 4. Decision Context
-
-Every agent action includes:
-
-- **What** - The specific action taken
-- **Why** - The reasoning behind the decision
-- **Risk Assessment** - Potential impact analysis
-- **Systems Affected** - External systems that will be modified
-- **Confidence Level** - How certain the agent is
-- **Alternatives Considered** - Other options that were evaluated
+---
 
 ## Dashboard Views
 
-### Overview
+| Tab | Content |
+|-----|---------|
+| **Overview** | KPIs, Agent hierarchy graph, Approval center, AI decision log, Agent status cards, Trust scores, Charts (task history, distribution, confidence trend) |
+| **Agents** | Intervention controls (pause/stop/resume), Agent boundaries, Agent communication |
+| **Systems** | System connections (CRM, email, WhatsApp, etc.), Trust scores |
+| **Activity** | Real-time activity feed, Event log, Agent communication |
+| **Live** | Live agent monitor with tool calls, progress bars, and real-time event stream |
+| **Replay** | Mission replay timeline with play/pause/step controls and AI decision explanations |
 
-High-level metrics and agent status at a glance:
-
-- Active agents and current tasks
-- Success rate and confidence scores
-- Pending approvals requiring attention
-- Active alerts and system health
-- Task activity trends (24h)
-- Agent performance comparison
-
-### Agents
-
-Detailed control over individual agents:
-
-- Trust scores and health indicators
-- Current task and decision context
-- Intervention controls (pause/stop/resume)
-- Boundary visualization (allowed/blocked actions)
-- Communication between agents
-
-### Systems
-
-External system connection status:
-
-- Connected systems (CRM, Email, WhatsApp, etc.)
-- API quota and rate limiting
-- Error counts and health scores
-- Which agents are connected to each system
-
-### Activity
-
-Real-time event stream:
-
-- Agent actions and decisions
-- Human escalations
-- Policy violations and blocks
-- System events and alerts
-- Complete audit trail
+---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          Agent Control Tower                                 │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │                     HUMAN INTERFACE LAYER                           │   │
-│  │  Dashboard │ Approvals │ Controls │ Activity │ Audit Log            │   │
-│  └──────────────────────────────┬──────────────────────────────────────┘   │
-│                                 │                                           │
-│  ┌──────────────────────────────┴──────────────────────────────────────┐   │
-│  │                     GOVERNANCE ENGINE                               │   │
-│  │  Trust Scoring │ Boundary Enforcement │ Risk Assessment │ Audit     │   │
-│  └──────────────────────────────┬──────────────────────────────────────┘   │
-│                                 │                                           │
-│  ┌──────────────────────────────┴──────────────────────────────────────┐   │
-│  │                     AGENT ORCHESTRATION                             │   │
-│  │  Task Assignment │ Decision Routing │ Escalation │ Intervention     │   │
-│  └──────────────────────────────┬──────────────────────────────────────┘   │
-│                                 │                                           │
-│  ┌──────────────────────────────┴──────────────────────────────────────┐   │
-│  │                     SYSTEM INTEGRATIONS                             │   │
-│  │  CRM │ Email │ WhatsApp │ Calendar │ Payment │ Database │ APIs      │   │
-│  └────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         Agent Control Tower                              │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │                    HUMAN INTERFACE LAYER                          │   │
+│  │  Dashboard │ Approvals │ Graph │ Replay │ AI Log │ Live Monitor   │   │
+│  └───────────────────────────────┬───────────────────────────────────┘   │
+│                                  │                                        │
+│  ┌───────────────────────────────┴───────────────────────────────────┐   │
+│  │                     GOVERNANCE ENGINE                              │   │
+│  │  Trust Scoring │ Boundary Enforcement │ Risk Assessment │ Audit    │   │
+│  └───────────────────────────────┬───────────────────────────────────┘   │
+│                                  │                                        │
+│  ┌───────────────────────────────┴───────────────────────────────────┐   │
+│  │                     SIMULATION ENGINE                              │   │
+│  │  Agent Status Cycling │ Tool Call Generation │ Event Processing    │   │
+│  └───────────────────────────────┬───────────────────────────────────┘   │
+│                                  │                                        │
+│  ┌───────────────────────────────┴───────────────────────────────────┐   │
+│  │                     DATA LAYER                                    │   │
+│  │  SQLite │ REST API (Next.js) │ Polling (5-15s)                    │   │
+│  └───────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 + shadcn/ui |
+| Database | SQLite (better-sqlite3) |
+| Charts | Recharts |
+| Commands | cmdk |
+| Deployment | Vercel (production) |
+| CI | GitHub Actions |
+| Container | Docker (multi-stage, healthcheck) |
 
 ## AI Agent Fleet
 
-| Agent | Purpose | Trust Score | Key Systems |
-|-------|---------|-------------|-------------|
-| **Customer Support** | Handle inquiries, resolve complaints, manage tickets | 92% | CRM, Email |
-| **Sales** | Qualify leads, send outreach, manage pipeline | 87% | CRM, Email, Calendar |
-| **CRM** | Maintain records, enrich data, ensure hygiene | 78% | CRM, Database |
-| **Email** | Process emails, classify, auto-respond | 95% | Email |
-| **WhatsApp** | Handle messages, quick replies, order tracking | 65% | WhatsApp |
-| **Scheduling** | Manage calendars, coordinate meetings | 98% | Calendar |
+| Agent | Purpose | Key Systems |
+|-------|---------|-------------|
+| **Customer Support** | Handle inquiries, resolve complaints, manage tickets | CRM, Email |
+| **Sales** | Qualify leads, send outreach, manage pipeline | CRM, Email, Calendar |
+| **CRM** | Maintain records, enrich data, ensure hygiene | CRM, Database |
+| **Email** | Process emails, classify, auto-respond | Email |
+| **WhatsApp** | Handle messages, quick replies, order tracking | WhatsApp |
+| **Scheduling** | Manage calendars, coordinate meetings | Calendar |
 
 ## Getting Started
 
 ```bash
-git clone https://github.com/your-org/agent-control-tower.git
+git clone https://github.com/hafirhalima00-coder/agent-control-tower.git
 cd agent-control-tower
 npm install
 npm run dev
@@ -185,49 +128,26 @@ npm run dev
 
 Open [http://localhost:3001](http://localhost:3001)
 
-## Key Design Principles
+### Production Build
 
-1. **Human Authority** - Humans always have final say over critical actions
-2. **Transparency** - Every decision is explainable and auditable
-3. **Graduated Trust** - Agents earn trust through consistent performance
-4. **Fail-Safe Defaults** - Unknown actions require approval
-5. **Complete Audit** - Every action is logged with full context
-
-## Use Cases
-
-### Customer Support Escalation
-
-```
-1. Customer sends angry email about billing
-2. Support Agent reads sentiment: -0.7 (negative)
-3. Agent attempts to process $1,200 refund
-4. Control Tower: "Requires approval - over $500 limit"
-5. Human reviews context, approves refund
-6. Agent executes, logs decision
-7. Trust score updates based on outcome
+```bash
+npm run build
+npm start
 ```
 
-### Security Incident Response
+### Docker
 
-```
-1. CRM Agent attempts bulk data export
-2. Control Tower blocks: "Blocked by policy"
-3. Alert generated: "Permission violation"
-4. Human investigates, finds legitimate request
-5. Human approves with temporary boundary override
-6. Agent completes task, boundary restored
+```bash
+docker compose up
 ```
 
-### Lead Qualification
+## Design Principles
 
-```
-1. Sales Agent receives new lead from website
-2. Agent scores lead: 87/100 (high quality)
-3. Agent schedules demo meeting
-4. Control Tower: "Meeting scheduled - no approval needed"
-5. All actions within boundaries
-6. Trust score increases
-```
+1. **Human Authority** — Humans always have final say over critical actions
+2. **Transparency** — Every decision is explainable and auditable
+3. **Graduated Trust** — Agents earn trust through consistent performance
+4. **Fail-Safe Defaults** — Unknown actions require approval
+5. **Complete Audit** — Every action is logged with full context
 
 ## License
 

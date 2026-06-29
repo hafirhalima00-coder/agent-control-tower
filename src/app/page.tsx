@@ -14,10 +14,15 @@ import { AgentBoundaries } from '@/components/dashboard/agent-boundaries';
 import { InterventionControls } from '@/components/dashboard/intervention-controls';
 import { ActivityFeed } from '@/components/dashboard/activity-feed';
 import { TrustScoreVisualization } from '@/components/dashboard/trust-score';
+import { ApprovalCenter } from '@/components/dashboard/approval-center';
+import { AgentGraph } from '@/components/dashboard/agent-graph';
+import { AIExplanation } from '@/components/dashboard/ai-explanation';
+import { ReplayMode } from '@/components/dashboard/replay-mode';
+import { LiveSimulation } from '@/components/dashboard/live-simulation';
 import { StatsCardsSkeleton, AgentCardSkeleton, ChartSkeleton } from '@/components/ui/skeleton';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
-import { DashboardStats, Agent } from '@/types';
-import { RefreshCw } from 'lucide-react';
+import { DashboardStats, Agent, AuditEntry } from '@/types';
+import { RefreshCw, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,6 +32,7 @@ export default function DashboardPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [eventCount, setEventCount] = useState(0);
 
   const fetchData = useCallback(async () => {
     try {
@@ -41,6 +47,7 @@ export default function DashboardPage() {
       if (statsData.success) setStats(statsData.data);
       if (agentsData.success) setAgents(agentsData.data);
       setLastUpdated(new Date());
+      setEventCount(prev => prev + 1);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -50,7 +57,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 10000);
+    const interval = setInterval(fetchData, 8000);
     return () => clearInterval(interval);
   }, [fetchData]);
 
@@ -59,10 +66,10 @@ export default function DashboardPage() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title="Agent Control Tower" />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <div className="space-y-6">
+        <main className="flex-1 overflow-y-auto p-3 md:p-6">
+          <div className="space-y-4 md:space-y-6 max-w-[1600px] mx-auto">
             {/* Live indicator */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="gap-1">
                   <span className="relative flex h-2 w-2">
@@ -72,8 +79,14 @@ export default function DashboardPage() {
                   Live
                 </Badge>
                 <span className="text-xs text-muted-foreground">
-                  Last updated: {lastUpdated.toLocaleTimeString()}
+                  Updated {lastUpdated.toLocaleTimeString()}
                 </span>
+                {stats?.simulationTick !== undefined && stats.simulationTick > 0 && (
+                  <Badge variant="secondary" className="text-[10px] gap-1">
+                    <Zap className="h-2.5 w-2.5" />
+                    Tick #{stats.simulationTick}
+                  </Badge>
+                )}
               </div>
               <Button variant="outline" size="sm" onClick={fetchData}>
                 <RefreshCw className="mr-2 h-3 w-3" />
@@ -91,30 +104,38 @@ export default function DashboardPage() {
             </ErrorBoundary>
 
             {/* Main Content with Tabs */}
-            <Tabs defaultValue="overview" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4 md:w-auto md:grid-cols-6">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="agents">Agents</TabsTrigger>
-                <TabsTrigger value="systems">Systems</TabsTrigger>
-                <TabsTrigger value="activity">Activity</TabsTrigger>
-              </TabsList>
+            <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
+              <div className="overflow-x-auto -mx-3 px-3 md:mx-0 md:px-0">
+                <TabsList className="w-full sm:w-auto inline-flex">
+                  <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+                  <TabsTrigger value="agents" className="text-xs sm:text-sm">Agents</TabsTrigger>
+                  <TabsTrigger value="systems" className="text-xs sm:text-sm">Systems</TabsTrigger>
+                  <TabsTrigger value="activity" className="text-xs sm:text-sm">Activity</TabsTrigger>
+                  <TabsTrigger value="live" className="text-xs sm:text-sm">Live</TabsTrigger>
+                  <TabsTrigger value="replay" className="text-xs sm:text-sm">Replay</TabsTrigger>
+                </TabsList>
+              </div>
 
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-6">
-                {/* Charts Row */}
+              <TabsContent value="overview" className="space-y-4 md:space-y-6">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <ErrorBoundary><TaskHistoryChart /></ErrorBoundary>
+                  <ErrorBoundary><AgentDistributionChart /></ErrorBoundary>
+                  <ErrorBoundary><ConfidenceTrendChart /></ErrorBoundary>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   <ErrorBoundary>
-                    <TaskHistoryChart />
+                    <AgentGraph agents={agents} eventCount={eventCount} />
                   </ErrorBoundary>
                   <ErrorBoundary>
-                    <AgentDistributionChart />
+                    <ApprovalCenter />
                   </ErrorBoundary>
                   <ErrorBoundary>
-                    <ConfidenceTrendChart />
+                    <AIExplanation />
                   </ErrorBoundary>
                 </div>
 
-                {/* Main Content Grid */}
                 <div className="grid gap-6 lg:grid-cols-3">
                   <div className="lg:col-span-2">
                     <ErrorBoundary>
@@ -129,11 +150,8 @@ export default function DashboardPage() {
                       )}
                     </ErrorBoundary>
                   </div>
-
-                  <div className="space-y-6">
-                    <ErrorBoundary>
-                      <TrustScoreVisualization />
-                    </ErrorBoundary>
+                  <div className="space-y-4 md:space-y-6">
+                    <ErrorBoundary><TrustScoreVisualization /></ErrorBoundary>
                     <ErrorBoundary>
                       {stats && <AgentPerformanceChart performance={stats.agentPerformance} />}
                     </ErrorBoundary>
@@ -142,14 +160,10 @@ export default function DashboardPage() {
               </TabsContent>
 
               {/* Agents Tab */}
-              <TabsContent value="agents" className="space-y-6">
+              <TabsContent value="agents" className="space-y-4 md:space-y-6">
                 <div className="grid gap-6 lg:grid-cols-2">
-                  <ErrorBoundary>
-                    <InterventionControls />
-                  </ErrorBoundary>
-                  <ErrorBoundary>
-                    <AgentBoundaries />
-                  </ErrorBoundary>
+                  <ErrorBoundary><InterventionControls /></ErrorBoundary>
+                  <ErrorBoundary><AgentBoundaries /></ErrorBoundary>
                 </div>
                 <ErrorBoundary>
                   <AgentCommunicationView />
@@ -157,31 +171,40 @@ export default function DashboardPage() {
               </TabsContent>
 
               {/* Systems Tab */}
-              <TabsContent value="systems" className="space-y-6">
+              <TabsContent value="systems" className="space-y-4 md:space-y-6">
                 <div className="grid gap-6 lg:grid-cols-2">
-                  <ErrorBoundary>
-                    <SystemConnections />
-                  </ErrorBoundary>
-                  <ErrorBoundary>
-                    <TrustScoreVisualization />
-                  </ErrorBoundary>
+                  <ErrorBoundary><SystemConnections /></ErrorBoundary>
+                  <ErrorBoundary><TrustScoreVisualization /></ErrorBoundary>
                 </div>
               </TabsContent>
 
               {/* Activity Tab */}
-              <TabsContent value="activity" className="space-y-6">
+              <TabsContent value="activity" className="space-y-4 md:space-y-6">
                 <div className="grid gap-6 lg:grid-cols-2">
-                  <ErrorBoundary>
-                    <ActivityFeed />
-                  </ErrorBoundary>
-                  <div className="space-y-6">
+                  <ErrorBoundary><ActivityFeed /></ErrorBoundary>
+                  <div className="space-y-4 md:space-y-6">
                     <ErrorBoundary>
                       {stats && <RecentActivity activities={stats.recentActivity} />}
                     </ErrorBoundary>
-                    <ErrorBoundary>
-                      <AgentCommunicationView />
-                    </ErrorBoundary>
+                    <ErrorBoundary><AgentCommunicationView /></ErrorBoundary>
                   </div>
+                </div>
+              </TabsContent>
+
+              {/* Live Tab */}
+              <TabsContent value="live" className="space-y-4 md:space-y-6">
+                <LiveSimulation />
+              </TabsContent>
+
+              {/* Replay Tab */}
+              <TabsContent value="replay" className="space-y-4 md:space-y-6">
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <ErrorBoundary>
+                    <ReplayMode events={stats?.recentActivity as AuditEntry[] || []} />
+                  </ErrorBoundary>
+                  <ErrorBoundary>
+                    <AIExplanation />
+                  </ErrorBoundary>
                 </div>
               </TabsContent>
             </Tabs>
