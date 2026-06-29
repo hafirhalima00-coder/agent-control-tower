@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  agentops:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentops-control-tower
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/data/agentops.db
+    volumes:
+      - agentops-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+volumes:
+  agentops-data:
+    driver: local
