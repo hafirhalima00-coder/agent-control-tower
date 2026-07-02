@@ -2,6 +2,14 @@
   "name": "agentops-control-tower",
   "version": "1.0.0",
   "private": true,
+  "description": "Centralized command center for supervising AI agents operating across business systems",
+  "author": "Halima Hafir",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hafirhalima00-coder/agent-control-tower.git"
+  },
+  "keywords": ["ai", "agents", "monitoring", "control-tower", "nextjs", "typescript"],
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",

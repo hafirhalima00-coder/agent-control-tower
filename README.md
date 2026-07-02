@@ -152,3 +152,7 @@ docker compose up
 ## License
 
 MIT License - see [LICENSE](LICENSE)
+
+---
+
+> **built by Halima Hafir**
