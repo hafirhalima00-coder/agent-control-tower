@@ -9,6 +9,10 @@
 
 **Agent Control Tower** is a centralized command center for supervising AI agents operating across business systems — CRM, Email, WhatsApp, Calendar, and more. It provides humans with real-time visibility, human-in-the-loop approval controls, and complete audit governance over autonomous AI actions.
 
+<p align="center">
+  <video src="public/demo.mp4" controls width="100%" style="max-width: 720px; border-radius: 12px;"></video>
+</p>
+
 [▶ Watch the demo](https://youtu.be/JI1OGZVuIls) | [🌐 Live demo](https://agentops-control-tower.vercel.app)
 
 ---
