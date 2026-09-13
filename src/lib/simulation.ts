@@ -47,11 +47,15 @@ export function getSimulationState() {
       health: a.health,
       confidenceScore: a.confidence_score,
       trustScore: a.trust_score,
+      totalCostCents: a.total_cost_cents || 0,
+      totalTokens: a.total_tokens || 0,
     })),
     toolCalls: { ...toolCalls },
     progress: { ...progress },
     timeline: timeline.slice(0, 50),
     tick: tickCount,
+    totalCostCents: agents.reduce((sum: number, a: any) => sum + (a.total_cost_cents || 0), 0),
+    totalTokens: agents.reduce((sum: number, a: any) => sum + (a.total_tokens || 0), 0),
   };
 }
 

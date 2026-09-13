@@ -19,6 +19,7 @@ import { AgentGraph } from '@/components/dashboard/agent-graph';
 import { AIExplanation } from '@/components/dashboard/ai-explanation';
 import { ReplayMode } from '@/components/dashboard/replay-mode';
 import { LiveSimulation } from '@/components/dashboard/live-simulation';
+import { RogueAgentDemo } from '@/components/dashboard/rogue-agent-demo';
 import { StatsCardsSkeleton, AgentCardSkeleton, ChartSkeleton } from '@/components/ui/skeleton';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { DashboardStats, Agent, AuditEntry } from '@/types';
@@ -168,6 +169,7 @@ export default function DashboardPage() {
                 <ErrorBoundary>
                   <AgentCommunicationView />
                 </ErrorBoundary>
+                <RogueAgentDemo />
               </TabsContent>
 
               {/* Systems Tab */}
@@ -194,6 +196,7 @@ export default function DashboardPage() {
               {/* Live Tab */}
               <TabsContent value="live" className="space-y-4 md:space-y-6">
                 <LiveSimulation />
+                <RogueAgentDemo />
               </TabsContent>
 
               {/* Replay Tab */}

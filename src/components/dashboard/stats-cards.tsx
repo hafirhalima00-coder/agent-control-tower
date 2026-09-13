@@ -22,6 +22,9 @@ interface StatsCardsProps {
     avgConfidence: number;
     avgTrustScore: number;
     humanApprovalRate: number;
+    avgCostPerTask: number;
+    totalCostCents: number;
+    totalTokens: number;
   };
 }
 
@@ -108,6 +111,22 @@ export function StatsCards({ stats }: StatsCardsProps) {
       description: 'Need attention',
       color: stats.failedTasks > 3 ? 'text-red-500' : 'text-gray-500',
       bgColor: stats.failedTasks > 3 ? 'bg-red-500/10' : 'bg-gray-500/10',
+    },
+    {
+      title: 'Total Cost',
+      value: `$${((stats.totalCostCents || 0) / 100).toFixed(2)}`,
+      icon: DollarSign,
+      description: 'Across all agents',
+      color: 'text-emerald-500',
+      bgColor: 'bg-emerald-500/10',
+    },
+    {
+      title: 'Total Tokens',
+      value: ((stats.totalTokens || 0) / 1000).toFixed(1) + 'k',
+      icon: Timer,
+      description: `${(stats.avgCostPerTask || 0)} cents/task`,
+      color: 'text-sky-500',
+      bgColor: 'bg-sky-500/10',
     },
   ];
 

@@ -41,7 +41,9 @@ function initializeDatabase(db: Database.Database): void {
       intervention_count INTEGER NOT NULL DEFAULT 0,
       last_intervention TEXT,
       paused_at TEXT,
-      paused_by TEXT
+      paused_by TEXT,
+      total_cost_cents INTEGER NOT NULL DEFAULT 0,
+      total_tokens INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS tasks (
@@ -63,6 +65,8 @@ function initializeDatabase(db: Database.Database): void {
       risk_level TEXT NOT NULL DEFAULT 'low',
       human_override INTEGER NOT NULL DEFAULT 0,
       override_reason TEXT,
+      cost_cents INTEGER NOT NULL DEFAULT 0,
+      tokens_used INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (agent_id) REFERENCES agents(id)
     );
 

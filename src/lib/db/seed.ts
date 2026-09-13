@@ -63,6 +63,8 @@ function generateAgents(): Agent[] {
       lastIntervention: Math.random() > 0.5 ? randomDate(7) : null,
       pausedAt: status === 'paused' ? randomDate(1) : null,
       pausedBy: status === 'paused' ? 'admin@company.com' : null,
+      totalCostCents: Math.floor(Math.random() * 50000) + 5000,
+      totalTokens: Math.floor(Math.random() * 500000) + 100000,
     };
   });
 }
@@ -121,6 +123,8 @@ function generateTasks(agents: Agent[]): Task[] {
         'Policy violation detected',
         null,
       ]) : null,
+      costCents: Math.floor(Math.random() * 500) + 10,
+      tokensUsed: Math.floor(Math.random() * 4000) + 200,
     });
   }
 
@@ -299,13 +303,13 @@ export function seedDatabase(): void {
   const approvals = generateApprovalRequests(agents);
 
   const insertAgent = db.prepare(`
-    INSERT INTO agents (id, name, type, status, current_task, confidence_score, last_action, last_action_timestamp, health, total_tasks, success_rate, created_at, updated_at, trust_score, intervention_count, last_intervention, paused_at, paused_by)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO agents (id, name, type, status, current_task, confidence_score, last_action, last_action_timestamp, health, total_tasks, success_rate, created_at, updated_at, trust_score, intervention_count, last_intervention, paused_at, paused_by, total_cost_cents, total_tokens)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertTask = db.prepare(`
-    INSERT INTO tasks (id, agent_id, agent_name, title, description, status, priority, input, output, confidence, started_at, completed_at, created_at, updated_at, decision_context, risk_level, human_override, override_reason)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO tasks (id, agent_id, agent_name, title, description, status, priority, input, output, confidence, started_at, completed_at, created_at, updated_at, decision_context, risk_level, human_override, override_reason, cost_cents, tokens_used)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertAlert = db.prepare(`
@@ -330,7 +334,7 @@ export function seedDatabase(): void {
         agent.confidenceScore, agent.lastAction, agent.lastActionTimestamp,
         agent.health, agent.totalTasks, agent.successRate, agent.createdAt, agent.updatedAt,
         agent.trustScore, agent.interventionCount, agent.lastIntervention,
-        agent.pausedAt, agent.pausedBy
+        agent.pausedAt, agent.pausedBy, agent.totalCostCents, agent.totalTokens
       );
     }
 
@@ -340,7 +344,8 @@ export function seedDatabase(): void {
         task.status, task.priority, JSON.stringify(task.input),
         task.output ? JSON.stringify(task.output) : null,
         task.confidence, task.startedAt, task.completedAt, task.createdAt, task.updatedAt,
-        task.decisionContext, task.riskLevel, task.humanOverride ? 1 : 0, task.overrideReason
+        task.decisionContext, task.riskLevel, task.humanOverride ? 1 : 0, task.overrideReason,
+        task.costCents, task.tokensUsed
       );
     }
 

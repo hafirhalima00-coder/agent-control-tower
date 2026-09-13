@@ -46,6 +46,8 @@ export interface Agent {
   lastIntervention: string | null;
   pausedAt: string | null;
   pausedBy: string | null;
+  totalCostCents: number;
+  totalTokens: number;
 }
 
 export interface AgentBoundary {
@@ -95,6 +97,8 @@ export interface Task {
   riskLevel: RiskLevel;
   humanOverride: boolean;
   overrideReason: string | null;
+  costCents: number;
+  tokensUsed: number;
 }
 
 export interface Alert {
@@ -177,6 +181,9 @@ export interface DashboardStats {
   humanApprovalRate: number;
   simulationTick: number;
   agentStatuses: { id: string; name: string; status: string }[];
+  totalCostCents: number;
+  totalTokens: number;
+  avgCostPerTask: number;
 }
 
 export interface AgentPerformance {
@@ -186,6 +193,9 @@ export interface AgentPerformance {
   tasksFailed: number;
   avgConfidence: number;
   successRate: number;
+  totalCostCents: number;
+  totalTokens: number;
+  avgCostPerTask: number;
 }
 
 export interface TimelineEvent {

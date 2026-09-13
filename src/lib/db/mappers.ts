@@ -18,6 +18,8 @@ export function mapAgent(row: any) {
     lastIntervention: row.last_intervention,
     pausedAt: row.paused_at,
     pausedBy: row.paused_by,
+    totalCostCents: row.total_cost_cents,
+    totalTokens: row.total_tokens,
   };
 }
 

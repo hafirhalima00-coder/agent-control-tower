@@ -23,7 +23,10 @@ export async function GET() {
         COUNT(*) as total,
         SUM(CASE WHEN status = 'in-progress' THEN 1 ELSE 0 END) as running,
         SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
-        SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed
+        SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
+        SUM(COALESCE(cost_cents, 0)) as totalTaskCost,
+        SUM(COALESCE(tokens_used, 0)) as totalTaskTokens,
+        AVG(COALESCE(cost_cents, 0)) as avgCostPerTask
       FROM tasks
     `).get() as any;
 
@@ -76,7 +79,10 @@ export async function GET() {
           WHEN COUNT(t.id) > 0 
           THEN (COUNT(CASE WHEN t.status = 'completed' THEN 1 END) * 100.0 / COUNT(t.id))
           ELSE 0 
-        END as success_rate
+        END as success_rate,
+        SUM(COALESCE(t.cost_cents, 0)) as total_cost_cents,
+        SUM(COALESCE(t.tokens_used, 0)) as total_tokens,
+        AVG(COALESCE(t.cost_cents, 0)) as avg_cost_per_task
       FROM agents a
       LEFT JOIN tasks t ON a.id = t.agent_id
       GROUP BY a.id, a.name
@@ -89,6 +95,9 @@ export async function GET() {
       tasksFailed: row.tasks_failed,
       avgConfidence: row.avg_confidence,
       successRate: row.success_rate,
+      totalCostCents: Number(row.total_cost_cents) || 0,
+      totalTokens: Number(row.total_tokens) || 0,
+      avgCostPerTask: Math.round(Number(row.avg_cost_per_task) || 0),
     }));
 
     const successRate = taskStats.total > 0 
@@ -122,6 +131,9 @@ export async function GET() {
         humanApprovalRate,
         simulationTick: sim.tick,
         agentStatuses: sim.agents.map((a: any) => ({ id: a.id, name: a.name, status: a.status })),
+        totalCostCents: Number(taskStats.totalTaskCost) || 0,
+        totalTokens: Number(taskStats.totalTaskTokens) || 0,
+        avgCostPerTask: Math.round(Number(taskStats.avgCostPerTask) || 0),
       }
     });
   } catch (error) {

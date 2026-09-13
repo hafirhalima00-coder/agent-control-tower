@@ -151,6 +151,31 @@ docker compose up
 4. **Fail-Safe Defaults** — Unknown actions require approval
 5. **Complete Audit** — Every action is logged with full context
 
+## Two-Year Thesis: Agent Operations as a Discipline
+
+Within two years, **Agent Operations (AgentOps)** will become a distinct engineering discipline — the SRE layer of the AI agent era. Just as DevOps emerged from the convergence of development and operations, AgentOps will unite AI model management, real-time governance, and operational control into a cohesive practice.
+
+Today, most organizations deploy AI agents as isolated tools — chatbots, copilots, automation scripts — without a unified control surface. This creates three critical gaps: **visibility** (no one sees what agents are actually doing across systems), **governance** (no mechanism to approve, audit, or block agent actions), and **containment** (no way to stop a misbehaving agent before it causes damage).
+
+The Agent Control Tower model addresses all three. It provides a centralized command center where operators observe agent fleets in real time, enforce boundaries through approval queues and policy rules, and intervene instantly via kill switches when agents behave unexpectedly. This is not monitoring — it is operational control.
+
+In two years, every organization running AI agents will need this layer. Regulators will require audit trails for agent decisions. Finance teams will demand cost attribution per agent task. Security teams will need per-agent permission boundaries. And operations teams will need real-time dashboards that show agent health, drift, and impact.
+
+AgentOps tooling will evolve from today's fragmented approach — spreadsheets, logs, and ad-hoc scripts — into a professional discipline with standardized practices: agent lifecycle management, boundary-as-code, trust calibration, cost governance, and incident response for agent failures. The organizations that master this discipline will deploy AI agents confidently and at scale. Those that don't will face the consequences of uncontrolled autonomous action.
+
+The Agent Control Tower is the cockpit for this new discipline.
+
+## Compliance & Audit
+
+All actions are logged with full context in the audit log. The audit trail includes:
+- Agent identity and action taken
+- Decision reasoning and confidence level
+- Risk assessment and systems affected
+- Human override status
+- Timestamp and user attribution
+
+Audit data can be exported via the `/api/audit` endpoint for compliance reporting and SIEM integration.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE)
